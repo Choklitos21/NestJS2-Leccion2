@@ -19,8 +19,8 @@ export class CreateProductDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    @MinLength(10)
-    @MaxLength(250)
+    @MinLength(1)
+    @MaxLength(100)
     category: string;
 
     @ApiProperty()

@@ -1,4 +1,4 @@
-import {Injectable, Logger} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -38,15 +38,44 @@ export class ProductsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number): Promise<Product | HttpException> {
+    const res = await this.productRepo.findOneBy({id});
+    if(!res){
+      this.logger.error({
+        message: `Error finding product for id:${id}`,
+        status: 404,
+      })
+      return new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+    return res
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateData: UpdateProductDto): Promise<Product | HttpException> {
+    const user = await this.productRepo.findOne({where: {id} })
+
+    if(!user){
+        this.logger.error({
+          message: `Product not found for id:${id}`,
+        })
+        return new HttpException('Update failed', HttpStatus.NOT_FOUND);
+    }
+    const updateUser = Object.assign(user, updateData)
+
+    return await this.productRepo.save(updateUser)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number): Promise<Product | HttpException> {
+    const deletedProduct = await this.productRepo.findOne({where: {id} })
+
+    if(!deletedProduct){
+      this.logger.error({
+        message: `Product not found for id:${id}`,
+      })
+      return new HttpException('Update failed', HttpStatus.NOT_FOUND);
+    }
+
+    await this.productRepo.delete(id)
+    return deletedProduct
   }
+
 }
