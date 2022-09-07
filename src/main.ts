@@ -8,7 +8,6 @@ async function bootstrap() {
 
   const logger = new Logger('/Main')
 
-
   const config = new DocumentBuilder()
       .setTitle('Api products')
       .setDescription('NestJS 2 leccion 1')

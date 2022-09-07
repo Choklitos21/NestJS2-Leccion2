@@ -4,21 +4,21 @@ import {IsNotEmpty, IsNumber, IsString, MaxLength, Min, MinLength} from "class-v
 import {ApiProperty} from "@nestjs/swagger";
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsNotEmpty()
     @IsString()
     @MinLength(10)
     @MaxLength(250)
     name: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsNotEmpty()
     @IsString()
     @MinLength(1)
     @MaxLength(100)
     category: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: Number })
     @IsNotEmpty()
     @IsNumber()
     @Min(1000)

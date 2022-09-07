@@ -9,21 +9,21 @@ import {
 import {ApiProperty} from "@nestjs/swagger";
 
 export class CreateProductDto {
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsNotEmpty()
     @IsString()
     @MinLength(10)
     @MaxLength(250)
     name: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsNotEmpty()
     @IsString()
     @MinLength(1)
     @MaxLength(100)
     category: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: Number })
     @IsNotEmpty()
     @IsNumber()
     @Min(1000)

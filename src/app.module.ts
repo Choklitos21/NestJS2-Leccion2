@@ -6,6 +6,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {Product} from "./products/entities/product.entity";
 import {AppConfigModule} from "./config/app/config.module";
 import {DatabaseConfigModule} from "./config/database/config.module";
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,13 +18,15 @@ import {DatabaseConfigModule} from "./config/database/config.module";
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [Product],
+      autoLoadEntities: true,
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Product]),
     ProductsModule,
     DatabaseConfigModule,
-    AppConfigModule
+    AppConfigModule,
+    UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

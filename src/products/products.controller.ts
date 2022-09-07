@@ -19,7 +19,9 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from "./entities/product.entity";
 /* HttpExceptions filter */
 import { HttpExceptionFilter } from "../config/HttpExceptions/http-exception.filter";
+import {ApiTags} from "@nestjs/swagger";
 
+@ApiTags('Products')
 @Controller('products')
 @UseFilters(new HttpExceptionFilter())
 export class ProductsController {
