@@ -1,29 +1,26 @@
+import { ProductsService } from './products.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from "./entities/product.entity";
+import { AuthGuard } from "@nestjs/passport";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {
-  Controller,
   Get,
   Post,
   Body,
   Patch,
   Param,
   Delete,
-  ValidationPipe,
   UsePipes,
-  UseFilters
+  UseGuards,
+  Controller,
+  ValidationPipe,
 } from '@nestjs/common';
-
-import { ProductsService } from './products.service';
-/* Dto's */
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-/* Entity */
-import { Product } from "./entities/product.entity";
-/* HttpExceptions filter */
-import { HttpExceptionFilter } from "../config/HttpExceptions/http-exception.filter";
-import {ApiTags} from "@nestjs/swagger";
 
 @ApiTags('Products')
 @Controller('products')
-@UseFilters(new HttpExceptionFilter())
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 

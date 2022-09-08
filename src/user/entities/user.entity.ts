@@ -1,5 +1,6 @@
 import {UserRole} from "../../utils/enums/enum-roles.enum";
 import {
+    BeforeInsert,
     Column,
     Entity,
     PrimaryGeneratedColumn
@@ -24,4 +25,16 @@ export class User {
 
     @Column({type: "enum", enum: UserRole, default: UserRole.USER})
     role: UserRole;
+
+    @BeforeInsert()
+    async lowerCaseAndSpaces() {
+        this.email = this.email.toLowerCase()
+        this.email = this.email.replace(/\s/g, '')
+    }
+
+    /*@BeforeInsert()
+    async encrypt() {
+        this.password = await bcrypt.hash(this.password, 10);
+    }*/
+
 }

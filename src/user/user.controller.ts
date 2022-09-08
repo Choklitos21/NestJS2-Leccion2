@@ -2,7 +2,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
-  ApiBadRequestResponse,
+  ApiBadRequestResponse, ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
@@ -15,8 +15,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete, UseGuards
 } from '@nestjs/common';
+import {AuthGuard} from "@nestjs/passport";
 
 @ApiTags('Users')
 @Controller('users')

@@ -1,9 +1,14 @@
-import {HttpException, HttpStatus, Injectable, Logger} from '@nestjs/common';
+import { Product } from "./entities/product.entity";
+import { Repository } from "typeorm";
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Product} from "./entities/product.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import {
+  Logger,
+  HttpStatus,
+  HttpException,
+  Injectable,
+} from '@nestjs/common';
 
 @Injectable()
 export class ProductsService {
@@ -20,10 +25,7 @@ export class ProductsService {
     try {
       return await this.productRepo.save(data)
     } catch (e) {
-      this.logger.error({
-        message: 'Error al crear el producto',
-        error: e,
-      })
+      throw new HttpException('User cannot be created', HttpStatus.BAD_GATEWAY)
     }
   }
 
@@ -31,21 +33,14 @@ export class ProductsService {
     try {
       return await this.productRepo.find();
     } catch (e) {
-      this.logger.error({
-        message: 'Error al crear el producto',
-        error: e,
-      })
+      throw new HttpException('Users not found', HttpStatus.NOT_FOUND)
     }
   }
 
   async findOne(id: number): Promise<Product | HttpException> {
     const res = await this.productRepo.findOneBy({id});
     if(!res){
-      this.logger.error({
-        message: `Error finding product for id:${id}`,
-        status: 404,
-      })
-      return new HttpException('Product not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User cannot be found', HttpStatus.NOT_FOUND)
     }
     return res
   }
@@ -54,10 +49,10 @@ export class ProductsService {
     const user = await this.productRepo.findOne({where: {id} })
 
     if(!user){
-        this.logger.error({
-          message: `Product not found for id:${id}`,
-        })
-        return new HttpException('Update failed', HttpStatus.NOT_FOUND);
+      throw new HttpException({
+        message: 'User cannot be updated',
+            why: 'User not found',},
+          HttpStatus.BAD_GATEWAY)
     }
     const updateUser = Object.assign(user, updateData)
 
@@ -68,10 +63,10 @@ export class ProductsService {
     const deletedProduct = await this.productRepo.findOne({where: {id} })
 
     if(!deletedProduct){
-      this.logger.error({
-        message: `Product not found for id:${id}`,
-      })
-      return new HttpException('Update failed', HttpStatus.NOT_FOUND);
+      throw new HttpException({
+            message: 'User cannot be deleted',
+            why: 'User not found',},
+          HttpStatus.BAD_GATEWAY)
     }
 
     await this.productRepo.delete(id)

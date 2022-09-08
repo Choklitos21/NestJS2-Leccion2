@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import { lowerAndSpaces } from "../utils/operations/lowercase-spaces";
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,8 @@ export class UserService {
 
   async createUser(userData: CreateUserDto) {
     try {
-      userData.password = await bcrypt.hash(userData.password, 10);
+      userData.password = bcrypt.hashSync(userData.password, 10);
+      userData.email = lowerAndSpaces(userData.email)
       const output = await this.userRepo.save(userData)
       delete output.password
       return output
@@ -40,7 +42,7 @@ export class UserService {
     }
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<User> {
     try {
       return await this.userRepo.findOne({where: {email: email}})
     } catch (e) {

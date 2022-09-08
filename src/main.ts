@@ -9,7 +9,8 @@ async function bootstrap() {
   const logger = new Logger('/Main')
 
   const config = new DocumentBuilder()
-      .setTitle('Api products')
+      .addBearerAuth()
+      .setTitle('Api NestJS 2 Leccion 1')
       .setDescription('NestJS 2 leccion 1')
       .setVersion('1.0')
       .addTag('api')

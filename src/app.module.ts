@@ -8,6 +8,7 @@ import {AppConfigModule} from "./config/app/config.module";
 import {DatabaseConfigModule} from "./config/database/config.module";
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import {User} from "./user/entities/user.entity";
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Product]),
+    TypeOrmModule.forFeature([Product, User]),
     ProductsModule,
     DatabaseConfigModule,
     AppConfigModule,
