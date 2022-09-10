@@ -1,9 +1,3 @@
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from "./entities/product.entity";
-import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {
   Get,
   Post,
@@ -12,22 +6,31 @@ import {
   Param,
   Delete,
   UsePipes,
-  UseGuards,
   Controller,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+
+import { ProductsService } from './products.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from "./entities/product.entity";
+import { UserRoles } from "../utils/enums/enum-roles.enum";
+import { Auth } from "../auth/decorators/auth.decorator";
+import { GetUser } from "../auth/decorators/get-user.decorator";
+import { User } from "../user/entities/user.entity";
 
 @ApiTags('Products')
 @Controller('products')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@Auth(UserRoles.ADMIN)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post('addProduct')
   @UsePipes(new ValidationPipe({transform: true}))
-  createUserResponseDto(@Body() productData: CreateProductDto) {
-    return this.productsService.createProduct(productData);
+  createUserResponseDto(@Body() productData: CreateProductDto, @GetUser() user: User) {
+    return this.productsService.createProduct(productData, user);
   }
 
   @Get('getAll')

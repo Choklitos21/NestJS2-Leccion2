@@ -8,6 +8,8 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
 import {User} from "../user/entities/user.entity";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {JwtStrategy} from "./strategies/jwt.strategy";
+import {GetUser} from "./decorators/get-user.decorator";
+import {Auth} from "./decorators/auth.decorator";
 
 @Module({
     imports: [

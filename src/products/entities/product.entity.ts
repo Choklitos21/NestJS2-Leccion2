@@ -1,8 +1,9 @@
 import {
     Column,
-    Entity,
+    Entity, ManyToOne,
     PrimaryGeneratedColumn
 } from "typeorm";
+import {User} from "../../user/entities/user.entity";
 
 @Entity({name: 'products'})
 export class Product {
@@ -17,4 +18,7 @@ export class Product {
 
     @Column({type: 'integer'})
     price: number;
+
+    @ManyToOne(() => User, (user) => user.product, { eager: true })
+    user: User;
 }

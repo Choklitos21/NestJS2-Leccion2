@@ -30,7 +30,7 @@ export class AuthService {
         delete user.password
         return {
           ...user,
-          token: this.getJwtToken({ email: user.email }),
+          token: this.getJwtToken({ id: user.id }),
         };
       }else {
         throw new HttpException('Password is incorrect', HttpStatus.BAD_GATEWAY)

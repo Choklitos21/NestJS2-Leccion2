@@ -1,10 +1,11 @@
-import {UserRole} from "../../utils/enums/enum-roles.enum";
 import {
-    BeforeInsert,
     Column,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn
 } from "typeorm";
+import { Product } from "../../products/entities/product.entity";
+import { UserRoles}  from "../../utils/enums/enum-roles.enum";
 
 @Entity({name: 'users'})
 export class User {
@@ -23,18 +24,10 @@ export class User {
     @Column({type: 'boolean', default: true})
     active: boolean;
 
-    @Column({type: "enum", enum: UserRole, default: UserRole.USER})
-    role: UserRole;
+    @Column({type: "text", array: true, nullable: true, default:[`${UserRoles.USER}`]})
+    role: string[];
 
-    @BeforeInsert()
-    async lowerCaseAndSpaces() {
-        this.email = this.email.toLowerCase()
-        this.email = this.email.replace(/\s/g, '')
-    }
-
-    /*@BeforeInsert()
-    async encrypt() {
-        this.password = await bcrypt.hash(this.password, 10);
-    }*/
+    @OneToMany(() => Product, (product) => product.user)
+    product: Product;
 
 }

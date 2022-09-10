@@ -7,6 +7,8 @@ import {
     MinLength
 } from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
+import {User} from "../../user/entities/user.entity";
+import {Exclude} from "class-transformer";
 
 export class CreateProductDto {
     @ApiProperty({ type: String })
@@ -28,5 +30,9 @@ export class CreateProductDto {
     @IsNumber()
     @Min(1000)
     price: number;
+
+    @ApiProperty({type: User})
+    @Exclude()
+    user: User;
 
 }

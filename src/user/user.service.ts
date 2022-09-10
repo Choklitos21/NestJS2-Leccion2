@@ -18,10 +18,11 @@ export class UserService {
     try {
       userData.password = bcrypt.hashSync(userData.password, 10);
       userData.email = lowerAndSpaces(userData.email)
-      const output = await this.userRepo.save(userData)
-      delete output.password
-      return output
+      const userCreated = await this.userRepo.save(userData)
+      delete userCreated.password
+      return userCreated
     } catch (e) {
+      console.log(e)
       throw new HttpException('User cannot be created', HttpStatus.BAD_GATEWAY)
     }
   }

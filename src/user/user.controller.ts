@@ -1,23 +1,24 @@
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import {
-  ApiBadRequestResponse, ApiBearerAuth,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiOperation,
-  ApiTags
-} from "@nestjs/swagger";
-import {
-  Controller,
   Get,
   Post,
   Body,
   Patch,
   Param,
-  Delete, UseGuards
+  Delete,
+  Controller,
 } from '@nestjs/common';
-import {AuthGuard} from "@nestjs/passport";
+import {
+  ApiTags,
+  ApiBody,
+  ApiOperation,
+  ApiBadRequestResponse, ApiBearerAuth,
+} from "@nestjs/swagger";
+
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import {UserRoles} from "../utils/enums/enum-roles.enum";
+import {Auth} from "../auth/decorators/auth.decorator";
 
 @ApiTags('Users')
 @Controller('users')
@@ -35,6 +36,8 @@ export class UserController {
   @Get('/findUsers')
   @ApiOperation({ operationId: "findUser", description: "Find al users" })
   @ApiBadRequestResponse({ description: "Error trying to find users" })
+  @ApiBearerAuth()
+  @Auth(UserRoles.ADMIN)
   findAllUsers() {
     return this.userService.findAllUsers();
   }

@@ -9,6 +9,7 @@ import {
   HttpException,
   Injectable,
 } from '@nestjs/common';
+import {User} from "../user/entities/user.entity";
 
 @Injectable()
 export class ProductsService {
@@ -21,9 +22,10 @@ export class ProductsService {
   ) {
   }
 
-  async createProduct(data: CreateProductDto): Promise<Product> {
+  async createProduct(product: CreateProductDto, user: User): Promise<Product> {
     try {
-      return await this.productRepo.save(data)
+      product.user = user;
+      return await this.productRepo.save(product)
     } catch (e) {
       throw new HttpException('User cannot be created', HttpStatus.BAD_GATEWAY)
     }
